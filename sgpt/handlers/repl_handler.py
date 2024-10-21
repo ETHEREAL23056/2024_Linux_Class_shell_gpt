@@ -74,6 +74,33 @@ class ReplHandler(ChatHandler):
                                     self.print_message(message_list[i + 1])
                     if count == 0:
                         typer.secho("No dialog found.", fg="red")
+        elif chat_id =='-dl':
+            while True:
+                existing_chats = self.chat_session.list()
+                if existing_chats:
+                    typer.echo("Existing Dialogs:")
+                    for index, chat_id in enumerate(existing_chats):
+                        typer.echo(f"{index + 1}. {chat_id.as_posix().split('/')[-1]}")
+
+                    # 创建提示信息
+                    while True:
+                        selected_index = typer.prompt("Please select a dialog ID (or input 'e' to exit)")
+
+                        if selected_index.lower() == 'e':
+                            raise typer.Exit()
+                        elif selected_index.lower() != '':
+                            try:
+                                selected_index = int(selected_index) - 1
+                                if 0 <= selected_index < len(existing_chats):
+                                    chat_id = existing_chats[selected_index]
+                                    _, res_info = self.chat_session.delete_session(chat_id)
+                                    typer.secho(res_info, fg="red")
+                                    break
+                                else:
+                                    typer.secho("Invalid dialog ID, please try again.", fg="red")
+                            except ValueError:
+                                typer.secho("Invalid input, please enter a number or 'e'.", fg="red")
+
         super().__init__(chat_id, role, markdown)
 
     @classmethod

@@ -6,7 +6,6 @@ import datetime
 import typer
 from click import BadArgumentUsage
 from rich.console import Console
-from rich.markdown import Markdown
 from rich.panel import Panel
 
 from ..config import cfg
@@ -91,6 +90,19 @@ class ChatSession:
         files = self.storage_path.glob("*")
         # Sort files by last modification time in ascending order.
         return sorted(files, key=lambda f: f.stat().st_mtime)
+
+    def delete_session(self, chat_id: str) -> (bool, str):
+        """
+        删除指定的聊天会话缓存文件。
+
+        :param chat_id: 聊天会话的唯一标识符。
+        """
+        file_path = self.storage_path / chat_id
+        if file_path.exists():
+            file_path.unlink(missing_ok=True)  # 删除文件，如果文件不存在不抛出异常
+            return True, "{chat_id} successfully deleted".format(chat_id=chat_id)
+        else:
+            return False, "{chat_id} not exists".format(chat_id=chat_id)
 
 
 class ChatHandler(Handler):

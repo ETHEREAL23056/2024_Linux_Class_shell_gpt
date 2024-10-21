@@ -204,7 +204,6 @@ def main(
         if not role
         else SystemRole.get(role)
     )
-    typer.secho(role_class)
 
     function_schemas = (get_openai_schemas() or None) if functions else None
 
