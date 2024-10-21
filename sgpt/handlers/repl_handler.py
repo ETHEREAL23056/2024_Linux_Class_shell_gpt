@@ -26,11 +26,11 @@ class ReplHandler(ChatHandler):
                                                   default='n')
 
                     if selected_index.lower() == 'n':
-                        # 要求输入-ls,-sa以外的非重复名称
+                        # 要求输入-ls,-sa,-dl以外的非重复名称
                         new_id = typer.prompt(
-                            "Please input the name of new chat (default 'default' and '-ls', '-sa' is forbidden)",
+                            "Please input the name of new chat (default 'default' and '-ls', '-sa' and '-dl' is forbidden)",
                             default='default')
-                        if new_id in ('-ls', '-sa'):
+                        if new_id in ('-ls', '-sa', '-dl'):
                             typer.secho("Invalid dialog name, please try again.", fg="red")
                         elif self.chat_session.exists(new_id):
                             typer.secho("Dialog name already exists, please try another", fg="red")
